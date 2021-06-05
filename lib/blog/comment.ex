@@ -5,15 +5,17 @@ defmodule Blog.Comment do
   schema "comments" do
     field :content, :string
     field :name, :string
-    field :post_id, :id
+    belongs_to :post, Blog.Posts, foreign_key: :post_id
 
     timestamps()
   end
 
+  # must \\ %{} for changeset/1 invoking
+  # must add reference :post_id to cast
   @doc false
-  def changeset(comment, attrs) do
+  def changeset(comment, attrs \\ %{}) do
     comment
-    |> cast(attrs, [:name, :content])
-    |> validate_required([:name, :content])
+    |> cast(attrs, [:name, :content, :post_id])
+    |> validate_required([:name, :content, :post_id])
   end
 end
